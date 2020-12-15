@@ -1,5 +1,5 @@
 import os
-
+from pathlib import Path
 from dotenv import load_dotenv
 
 class DsConfig:
@@ -53,11 +53,14 @@ class DsConfig:
 
     @classmethod
     def private_key(cls):
-        if os.path.isfile(os.getcwd() + cls.get_instance().config['DS_PRIVATE_KEY']):
-            return bytes(open(os.getcwd() + cls.get_instance().config['DS_PRIVATE_KEY'], 'rb').read())
+        d = cls.get_instance().config['DS_PRIVATE_KEY']
+        fName = Path.cwd() / d
+        if  fName.is_file():
+            b = bytes(open(fName,'rb').read())
+            return b
         else:
-            return cls.get_instance().config['DS_PRIVATE_KEY']
-
+            return d
+        
     @classmethod
     def gateway_id(cls):
         return cls.get_instance().config['DS_PAYMENT_GATEWAY_ID']
